@@ -16,19 +16,18 @@ let spaces = Array(9).fill(null);
 let gameEnded = false;
 
 const questions = [
-  { question: '9²', answer: '81' },
-  { question: '18²', answer: '324' },
-  { question: '7³', answer: '343' },
-  { question: '15²', answer: '225' },
-  { question: '14²', answer: '196' },
-  { question: '8³', answer: '512' },
-  { question: '3⁴', answer: '81' },
-  { question: '20X + 15 = 42 + 3 - 15 + 5x', answer: '1' },
-  { question: '2X + 70 = 7X + 100', answer: '-6' },
-  { question: '-2(5X+4) = 30 + 40 - 48', answer: '-3' },
-  { question: '30X + 60 = -10 + 20 + 5X', answer: '-2' },
-  { question: 'X = 3(9² - 78)', answer: '9' },
-
+  { question: '9²', answers: ['81', 'devAns'] },
+  { question: '18²', answers: ['324', 'devAns'] },
+  { question: '7³', answers: ['343', 'devAns'] },
+  { question: '15²', answers: ['225', 'devAns'] },
+  { question: '14²', answers: ['196', 'devAns'] },
+  { question: '8³', answers: ['512', 'devAns'] },
+  { question: '3⁴', answers: ['81', 'devAns'] },
+  { question: '20X + 15 = 42 + 3 - 15 + 5x', answers: ['1', 'devAns'] },
+  { question: '2X + 70 = 7X + 100', answers: ['-6', 'devAns'] },
+  { question: '-2(5X+4) = 30 + 40 - 48', answers: ['-3', 'devAns'] },
+  { question: '30X + 60 = -10 + 20 + 5X', answers: ['-2', 'devAns'] },
+  { question: 'X = 3(9² - 78)', answers: ['9', 'devAns'] },
 ];
 
 const startGame = () => {
@@ -45,14 +44,14 @@ function boxClicked(e) {
     if (question) {
       const userAnswer = prompt(question.question);
 
-      if (userAnswer === null || userAnswer.trim().toLowerCase() !== question.answer.toLowerCase()) {
+      if (userAnswer === null || !question.answers.some(answer => userAnswer.trim().toLowerCase() === answer.toLowerCase())) {
         currentPlayer = currentPlayer == X_TEXT ? O_TEXT : X_TEXT;
         turnText.innerText = currentPlayer + "'s turn";
         if (currentPlayer == X_TEXT) {
-            turnText.style.color = "red";
-          } else {
-            turnText.style.color = "yellow";
-          }
+          turnText.style.color = "red";
+        } else {
+          turnText.style.color = "yellow";
+        }
         askQuestion(currentPlayer);
       } else {
         spaces[id] = currentPlayer;
@@ -60,8 +59,10 @@ function boxClicked(e) {
 
         if (playerHasWon() !== false) {
           let winning_blocks = playerHasWon();
+          var audio = new Audio('congratulations.mp3');
+          audio.play();
           if (currentPlayer == X_TEXT) {
-            Xscore++
+            Xscore++;
             XscoreText.innerText = "X's score = " + Xscore;
             playerText.innerText = "X has won!";
             playerText.style.color = "red";
@@ -124,20 +125,20 @@ function isDraw() {
 
 function askQuestion(player) {
   const question = getRandomQuestion();
-  const answer = question.answer.toLowerCase();
+  const answers = question.answers.map(answer => answer.toLowerCase());
 
   currentPlayer = player;
 
-  return question;
+  return { question: question.question, answers };
 }
 
 function newGame() {
-    location.reload();
+  location.reload();
 }
 
 function xIsTheOp() {
-    Xscore = 91390924848932;
-    XscoreText.innerText = "X's score = " + Xscore;
+  Xscore = 91390924848932;
+  XscoreText.innerText = "X's score = " + Xscore;
 }
 
 function getRandomQuestion() {
